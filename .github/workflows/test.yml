@@ -1,0 +1,16 @@
+name: Test builds
+
+on: push
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Install
+        run: make install
+      - name: Lint
+        run: make lint
+      - name: test
+        run: make test
