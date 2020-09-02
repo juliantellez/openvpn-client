@@ -11,16 +11,17 @@ import (
 )
 
 const (
-	appName    = "openvpnClient"
-	appVersion = "0.1.0"
+	appName             = "openvpnClient"
+	appVersion          = "0.1.0"
 	errorServiceFailure = "Failed to run service"
 )
 
 var (
 	config struct {
-		LogLevel  string
-		LogOutput string
+		LogLevel          string
+		LogOutput         string
 		AddressPrometheus string
+		OpenVpnConfig     string
 	}
 
 	flags = []cli.Flag{
@@ -45,6 +46,12 @@ var (
 			Value:       ":8081",
 			Destination: &config.AddressPrometheus,
 		},
+		&cli.StringFlag{
+			Name:        "openvpn-config",
+			Usage:       "OVPN config file",
+			EnvVars:     []string{"OPENVPN_CONFIG"},
+			Destination: &config.OpenVpnConfig,
+		},
 	}
 )
 
@@ -56,9 +63,10 @@ func appAction(cliCtx *cli.Context) error {
 	ctx := cliCtx.Context
 
 	errorGroup, ctx := errgroup.WithContext(ctx)
+	metrics := prometheus.New(ctx, config.AddressPrometheus)
 
 	errorGroup.Go(func() error {
-		return prometheus.New(ctx, config.AddressPrometheus)
+		return metrics.Serve(ctx)
 	})
 
 	return errorGroup.Wait()

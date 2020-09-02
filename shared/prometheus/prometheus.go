@@ -13,24 +13,38 @@ const (
 	handlerPatternMetrics = "/__/metrics"
 )
 
-// New instantiates a handler for prometheus
-func New(ctx context.Context, address string) error {
+type (
+	// Metrics struct for prometheus
+	Metrics struct {
+		server *http.Server
+	}
+)
+
+// New configures a handler for prometheus
+func New(ctx context.Context, address string) *Metrics {
 	mux := http.NewServeMux()
 	mux.Handle(handlerPatternMetrics, promhttp.Handler())
 
-	server := http.Server{
+	metrics := &Metrics{}
+
+	metrics.server = &http.Server{
 		Handler: mux,
 		Addr:    address,
 	}
 
+	return metrics
+}
+
+// Serve instantiates a server over http
+func (metrics Metrics) Serve(ctx context.Context) error {
 	go func() {
 		<-ctx.Done()
 		timeoutCtx, cancel := context.WithTimeout(context.Background(), time.Second)
 		defer cancel()
-		if err := server.Shutdown(timeoutCtx); err != nil {
+		if err := metrics.server.Shutdown(timeoutCtx); err != nil {
 			log.Error(err)
 		}
 	}()
 
-	return server.ListenAndServe()
+	return metrics.server.ListenAndServe()
 }

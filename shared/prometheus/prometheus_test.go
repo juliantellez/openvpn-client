@@ -12,8 +12,10 @@ import (
 
 func TestPrometheus(t *testing.T) {
 	ctx, cancel := context.WithCancel(context.TODO())
+	metrics := prometheus.New(ctx, ":8081")
+
 	go func() {
-		err := prometheus.New(ctx, ":8081")
+		err := metrics.Serve(ctx)
 		assert.NoError(t, err)
 	}()
 
