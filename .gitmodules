@@ -1,0 +1,3 @@
+[submodule "shared/openvpn3"]
+	path = shared/openvpn3
+	url = https://github.com/OpenVPN/openvpn3
