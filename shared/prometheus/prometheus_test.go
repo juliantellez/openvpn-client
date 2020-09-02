@@ -21,7 +21,7 @@ func TestPrometheus(t *testing.T) {
 
 	time.Sleep(time.Millisecond * 200)
 	response, err := http.Get("http://localhost:8081/__/metrics")
-	assert.Error(t, err)
+	assert.NoError(t, err)
 	assert.Equal(t, http.StatusOK, response.StatusCode)
 	cancel()
 }
