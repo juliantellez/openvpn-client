@@ -3,6 +3,7 @@ package main
 import (
 	"os"
 
+	"github.com/juliantellez/openvpn-client/internal/client"
 	"github.com/juliantellez/openvpn-client/shared/logger"
 	"github.com/juliantellez/openvpn-client/shared/prometheus"
 	"github.com/sirupsen/logrus"
@@ -21,6 +22,7 @@ var (
 		LogLevel          string
 		LogOutput         string
 		AddressPrometheus string
+		AddressClient     string
 		OpenVpnConfig     string
 	}
 
@@ -47,6 +49,13 @@ var (
 			Destination: &config.AddressPrometheus,
 		},
 		&cli.StringFlag{
+			Name:        "client-address",
+			Usage:       "Client Address exposes the vpn wrapper",
+			EnvVars:     []string{"CLIENT_ADDRESS"},
+			Value:       ":7979",
+			Destination: &config.AddressClient,
+		},
+		&cli.StringFlag{
 			Name:        "openvpn-config",
 			Usage:       "OVPN config file",
 			EnvVars:     []string{"OPENVPN_CONFIG"},
@@ -64,9 +73,14 @@ func appAction(cliCtx *cli.Context) error {
 
 	errorGroup, ctx := errgroup.WithContext(ctx)
 	metrics := prometheus.New(ctx, config.AddressPrometheus)
+	client := client.New(ctx, config.AddressClient)
 
 	errorGroup.Go(func() error {
 		return metrics.Serve(ctx)
+	})
+
+	errorGroup.Go(func() error {
+		return client.Serve()
 	})
 
 	return errorGroup.Wait()

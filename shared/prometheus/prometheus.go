@@ -7,6 +7,7 @@ import (
 
 	"github.com/prometheus/client_golang/prometheus/promhttp"
 	"github.com/prometheus/common/log"
+	"github.com/sirupsen/logrus"
 )
 
 const (
@@ -45,6 +46,10 @@ func (metrics Metrics) Serve(ctx context.Context) error {
 			log.Error(err)
 		}
 	}()
+
+	logrus.WithFields(logrus.Fields{
+		"address": metrics.server.Addr,
+	}).Info("[ Metrics ] Listening")
 
 	return metrics.server.ListenAndServe()
 }

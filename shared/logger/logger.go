@@ -15,7 +15,7 @@ const (
 )
 
 // Logger structure
-type Logger struct {}
+type Logger struct{}
 
 // New creates a new logger instance
 func New(level, format string) error {
@@ -37,6 +37,5 @@ func New(level, format string) error {
 	default:
 		logrus.SetFormatter(&logrus.JSONFormatter{})
 	}
-	
 	return nil
 }
