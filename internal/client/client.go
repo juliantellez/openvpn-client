@@ -4,6 +4,9 @@ import (
 	"context"
 	"net/http"
 
+	"github.com/gin-gonic/gin"
+	"github.com/juliantellez/openvpn-client/internal/client/handlers"
+	"github.com/juliantellez/openvpn-client/internal/client/middlewares"
 	"github.com/sirupsen/logrus"
 )
 
@@ -16,8 +19,14 @@ type (
 
 // New configures the vpn client
 func New(ctx context.Context, address string) *Client {
+	gin.SetMode(gin.ReleaseMode)
+	engineHandler := gin.New()
+	middlewares.Bind(engineHandler)
+	handlers.Bind(engineHandler)
+
 	server := &http.Server{
-		Addr: address,
+		Addr:    address,
+		Handler: engineHandler,
 	}
 
 	client := &Client{}
