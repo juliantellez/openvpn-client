@@ -19,7 +19,7 @@ func TestNewClient(t *testing.T) {
 		assert.NoError(t, err)
 	}()
 
-	time.Sleep(time.Millisecond * 200)
+	time.Sleep(time.Millisecond * 500)
 	response, err := http.Get("http://localhost:7979")
 	assert.NoError(t, err)
 	assert.Equal(t, http.StatusNotFound, response.StatusCode)

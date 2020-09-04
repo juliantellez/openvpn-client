@@ -9,5 +9,5 @@ import (
 func Bind(engine *gin.Engine) {
 	engine.GET("/ping", ping)
 
-	logrus.Info("[ Client ] Binding Handlers")
+	logrus.Trace("[ Client ] Binding Handlers")
 }

@@ -8,5 +8,5 @@ import (
 // Bind attaches engine to handlers
 func Bind(engine *gin.Engine) {
 	engine.Use(Errors)
-	logrus.Info("[ Client ] Binding Middlewares")
+	logrus.Trace("[ Client ] Binding Middlewares")
 }

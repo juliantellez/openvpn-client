@@ -31,7 +31,7 @@ var (
 			Name:        "log-level",
 			Usage:       "Log Level",
 			EnvVars:     []string{"LOG_LEVEL"},
-			Value:       "trace",
+			Value:       "info",
 			Destination: &config.LogLevel,
 		},
 		&cli.StringFlag{
