@@ -9,7 +9,7 @@ install:
 .PHONY: lint
 lint:
 	@ [ -e ./bin/golangci-lint ] || wget -O - -q https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh | sh -s latest
-	$(go env GOPATH)/bin/golangci-lint run
+	./bin/golangci-lint run
 
 # ----- Testing -----
 
